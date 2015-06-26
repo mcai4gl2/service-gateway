@@ -1,1 +1,57 @@
 description = 'Service Gateway Domain'
+
+sourceSets.main.java.srcDirs "src/generated-sources/java"
+
+sourceSets.main.resources.excludes = ['domain.xsd', 'domain-binding.xjb']
+
+configurations {
+    jaxb
+}
+
+dependencies {
+    compile libraries.jackson
+    compile libraries.slf4j
+    compile 'org.jvnet.jaxb2_commons:jaxb2-basics:0.8.0'
+    jaxb (
+            libraries.jackson,
+            'com.sun.xml.bind:jaxb-xjc:2.2.5-2',
+            'com.sun.xml.bind:jaxb-impl:2.2.5-2',
+            'org.jvnet.jaxb2_commons:jaxb2-basics:0.8.0',
+            'org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.8.0',
+            'org.jvnet.jaxb2_commons:jaxb2-basics-annotate:1.0.1'
+    )
+}
+
+task jaxb() {
+    System.setProperty('javax.xml.accessExternalSchema', 'all')
+    def jaxbTargetDir = file("src/generated-sources/java")
+
+    doLast {
+        jaxbTargetDir.mkdirs()
+
+        ant.taskdef(
+                name: 'xjc',
+                classname: 'org.jvnet.jaxb2_commons.xjc.XJC2Task',
+                classpath: configurations.jaxb.asPath
+        )
+        ant.jaxbTargetDir = jaxbTargetDir
+
+
+        ant.xjc(
+                destdir: '${jaxbTargetDir}',
+                package: 'service.gateway.domain',
+                schema: 'src/main/resources/domain.xsd',
+                binding: 'src/main/resources/domain-binding.xjb',
+                extension: 'true'
+        ) {
+            arg(value: '-Xannotate')
+            arg(value: '-XtoString')
+            arg(value: '-Xequals')
+            arg(value: '-XhashCode')
+        }
+    }
+}
+
+compileJava.dependsOn jaxb
+
+clean.delete "src/generated-sources"
