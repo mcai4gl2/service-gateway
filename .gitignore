@@ -1,0 +1,12 @@
+target
+.classpath
+.settings
+.project
+*.iml
+.idea
+logs
+build
+out
+.gradle
+generated-sources
+artifacts

@@ -1,0 +1,3 @@
+rootProject.name = 'service-gateway'
+include 'service-gateway-domain'
+
