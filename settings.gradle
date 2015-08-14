@@ -1,3 +1,5 @@
 rootProject.name = 'service-gateway'
 include 'service-gateway-domain'
+include 'service-gateway-components'
+include 'service-gateway-test'
 

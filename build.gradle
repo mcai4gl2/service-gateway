@@ -26,6 +26,8 @@ ext.libraries = [
         jetty: [
                 "org.eclipse.jetty:jetty-webapp:$jetty_version"
         ],
+        jettyProxy: "org.eclipse.jetty:jetty-proxy:$jetty_version",
+        urlRewrite: 'org.tuckey:urlrewritefilter:4.0.4',
         servlet: 'javax.servlet:javax.servlet-api:3.0.1',
         inject: 'javax.inject:javax.inject:1',
         jettyClient: "org.eclipse.jetty:jetty-client:$jetty_version",

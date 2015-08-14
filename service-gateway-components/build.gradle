@@ -1,0 +1,16 @@
+description = 'Service Gateway Components'
+
+dependencies {
+    compile libraries.jetty
+    compile libraries.jettyClient
+    compile libraries.servlet
+    compile libraries.jettyProxy
+    compile libraries.urlRewrite
+    compile libraries.inject
+
+    compile libraries.slf4j
+
+    testCompile project(':service-gateway-test')
+}
+
+test.dependsOn ':service-gateway-test:war'

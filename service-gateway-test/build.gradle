@@ -1,0 +1,18 @@
+description = "Service Gateway Unit Test Utils"
+
+apply plugin: 'war'
+
+task explodedWar(type: Copy) {
+    into "${buildDir}/output/webapp"
+    with war
+}
+
+war.dependsOn explodedWar
+
+dependencies {
+    compile libraries.io
+    compile libraries.servlet
+    compile libraries.springMvc
+    compile libraries.slf4j
+    compile libraries.logback
+}
