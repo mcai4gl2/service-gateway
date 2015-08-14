@@ -39,7 +39,7 @@ task jaxb() {
 
         ant.xjc(
                 destdir: '${jaxbTargetDir}',
-                package: 'service.gateway',
+                package: 'service.gateway.domain',
                 schema: 'src/main/resources/domain.xsd',
                 binding: 'src/main/resources/domain-binding.xjb',
                 extension: 'true'

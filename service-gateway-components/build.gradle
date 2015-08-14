@@ -1,6 +1,7 @@
 description = 'Service Gateway Components'
 
 dependencies {
+    compile project(':service-gateway-domain')
     compile libraries.jetty
     compile libraries.jettyClient
     compile libraries.servlet

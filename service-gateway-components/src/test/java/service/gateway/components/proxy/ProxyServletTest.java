@@ -10,6 +10,8 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import service.gateway.domain.ProxyConfig;
+import service.gateway.domain.ProxyRoute;
 
 import java.io.File;
 
@@ -20,6 +22,8 @@ public class ProxyServletTest {
     private int port;
     private HandlerCollection handlers;
     private HttpClient httpClient;
+    private ProxyServlet proxyServlet;
+    private ProxyConfig proxyConfig;
 
     @Before
     public void before() throws Exception {
@@ -39,10 +43,14 @@ public class ProxyServletTest {
 
         ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         contextHandler.setContextPath("/test");
-        ProxyServlet proxyServlet = new ProxyServlet();
+        proxyServlet = new ProxyServlet();
         proxyServlet.setHttpClientProvider(new DefaultHttpClientProvider());
+        proxyConfig = new ProxyConfig();
+        ProxyRoute route1 = new ProxyRoute();
+        route1.setProxyTo("http://localhost:7411/subject");
+        proxyConfig.getRoutes().add(route1);
+        proxyServlet.setProxyConfig(proxyConfig);
         ServletHolder holder = new ServletHolder(proxyServlet);
-        holder.setInitParameter("proxyTo", "http://localhost:7411/subject");
         contextHandler.addServlet(holder, "/*");
 
 
@@ -75,5 +83,18 @@ public class ProxyServletTest {
         String result = response.getContentAsString();
         System.out.println(result);
         assertEquals("Pong", result);
+    }
+
+    @Test
+    public void testAddNewProxyRoute() throws Exception {
+        ProxyRoute route = new ProxyRoute();
+        route.setProxyTo("http://localhost:7411/nonexist");
+        proxyConfig.getRoutes().add(0, route);
+        proxyServlet.setProxyConfig(proxyConfig);
+
+        ContentResponse response = httpClient.GET("http://localhost:7411/test/ping");
+        String result = response.getContentAsString();
+        System.out.println(result);
+        assertEquals(404, response.getStatus());
     }
 }
